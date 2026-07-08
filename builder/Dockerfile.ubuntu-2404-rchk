@@ -38,7 +38,7 @@ ENV LLVM=/usr/lib/llvm-18
 
 RUN set -x \
     && cd /opt/R/devel-rchk \
-    && git clone --depth 1 https://github.com/kalibera/rchk.git \
+    && git clone -b llvm22 --depth 1 https://github.com/kvapca/rchk.git \
     && rm -rf rchk/.git \
     && cd rchk/src \
     && make \
