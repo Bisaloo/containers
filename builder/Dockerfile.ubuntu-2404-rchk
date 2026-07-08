@@ -34,7 +34,7 @@ ENV WLLVM_BC_STORE=/opt/R/devel-rchk/bcstore
 
 ENV WLLVM=/opt/R/devel-rchk/python/bin
 ENV RCHK=/opt/R/devel-rchk/rchk
-ENV LLVM=/usr/lib/llvm-14
+ENV LLVM=/usr/lib/llvm-18
 
 RUN set -x \
     && cd /opt/R/devel-rchk \
