@@ -10,8 +10,8 @@ on:
         required: false
         default: 'all'
         type: string
-  schedule:
-    - cron:  '55 2 * * *'
+  # schedule:
+  #   - cron:  '55 2 * * *'
 
 permissions:
   contents: write
