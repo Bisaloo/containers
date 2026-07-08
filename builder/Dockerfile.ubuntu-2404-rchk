@@ -10,15 +10,35 @@ ENV OS_IDENTIFIER ubuntu-2404
 
 RUN chmod 0777 /opt
 
-RUN set -x \
-  && sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources \
-  && export DEBIAN_FRONTEND=noninteractive \
-  && apt-get update \
-  && apt-get install -y curl libcurl4-openssl-dev libicu-dev \
+ARG DEBIAN_FRONTEND=noninteractive
+ARG LLVM_VERSION=22
+ARG RCHK_REPO=https://github.com/kvapca/rchk
+ARG RCHK_REF=llvm22
+ARG R_SVN_REVISION=HEAD
+
+RUN set -x && \
+  sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
+
+RUN apt-get update && \
+  apt-get install -yq --no-install-recommends apt-utils
+
+# Add LLVM package repository
+RUN apt-get update && apt-get install -yq ca-certificates wget && \
+  wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc >/dev/null && \
+  . /etc/os-release && \
+  echo "deb http://apt.llvm.org/${VERSION_CODENAME}/ llvm-toolchain-${VERSION_CODENAME}-${LLVM_VERSION} main" > /etc/apt/sources.list.d/llvm.list && \
+  echo "deb-src http://apt.llvm.org/${VERSION_CODENAME}/ llvm-toolchain-${VERSION_CODENAME}-${LLVM_VERSION} main" >> /etc/apt/sources.list.d/llvm.list
+
+# Install LLVM
+RUN apt-get update && apt-get install -yq \
+      clang-${LLVM_VERSION} llvm-${LLVM_VERSION} llvm-${LLVM_VERSION}-dev \
+      libllvm${LLVM_VERSION} libc++-${LLVM_VERSION}-dev libc++abi-${LLVM_VERSION}-dev make
+
+ 
+RUN apt-get install -y curl libcurl4-openssl-dev libicu-dev \
              libopenblas-dev libpcre2-dev wget python3-pip \
   && apt-get build-dep -y r-base \
-  && apt-get install -y git make clang llvm-dev '^clang++$' llvm \
-             libllvm14 libc++-dev libc++abi-dev file \
+  && apt-get install -y git make clang file \
   && mkdir -p /opt/R/devel-rchk/python \
   && pip3 install --target /opt/R/devel-rchk/python wllvm \
   && for prog in $(ls /opt/R/devel-rchk/python/bin); do \
@@ -34,7 +54,7 @@ ENV WLLVM_BC_STORE=/opt/R/devel-rchk/bcstore
 
 ENV WLLVM=/opt/R/devel-rchk/python/bin
 ENV RCHK=/opt/R/devel-rchk/rchk
-ENV LLVM=/usr/lib/llvm-18
+ENV LLVM=/usr/lib/llvm-22
 
 RUN set -x \
     && cd /opt/R/devel-rchk \
