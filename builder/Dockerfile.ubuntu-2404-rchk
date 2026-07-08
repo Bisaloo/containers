@@ -38,7 +38,7 @@ ENV LLVM=/usr/lib/llvm-14
 
 RUN set -x \
     && cd /opt/R/devel-rchk \
-    && git clone -b fix/altrep-lists-llvm14 --depth 1 https://github.com/gaborcsardi/rchk.git \
+    && git clone --depth 1 https://github.com/kalibera/rchk.git \
     && rm -rf rchk/.git \
     && cd rchk/src \
     && make \
