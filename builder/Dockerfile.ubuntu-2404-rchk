@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -yq ca-certificates wget && \
 # Install LLVM
 RUN apt-get update && apt-get install -yq \
       clang-${LLVM_VERSION} llvm-${LLVM_VERSION} llvm-${LLVM_VERSION}-dev \
-      libllvm${LLVM_VERSION} libc++-${LLVM_VERSION}-dev libc++abi-${LLVM_VERSION}-dev make
+      libllvm${LLVM_VERSION} libc++-${LLVM_VERSION}-dev libc++abi-${LLVM_VERSION}-dev lld-${LLVM_VERSION} make
 
  
 RUN apt-get install -y curl libcurl4-openssl-dev libicu-dev \
